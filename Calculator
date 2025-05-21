@@ -1,0 +1,289 @@
+import React, { useState, useEffect } from 'react';
+
+const Calculator = () => {
+  const [display, setDisplay] = useState('0');
+  const [firstOperand, setFirstOperand] = useState(null);
+  const [operator, setOperator] = useState(null);
+  const [waitingForSecondOperand, setWaitingForSecondOperand] = useState(false);
+  const [history, setHistory] = useState([]);
+
+  // Input digit handler
+  const inputDigit = (digit) => {
+    if (waitingForSecondOperand) {
+      setDisplay(String(digit));
+      setWaitingForSecondOperand(false);
+    } else {
+      setDisplay(display === '0' ? String(digit) : display + digit);
+    }
+  };
+
+  // Input decimal point
+  const inputDecimal = () => {
+    if (waitingForSecondOperand) {
+      setDisplay('0.');
+      setWaitingForSecondOperand(false);
+      return;
+    }
+
+    if (!display.includes('.')) {
+      setDisplay(display + '.');
+    }
+  };
+
+  // Clear all
+  const clearAll = () => {
+    setDisplay('0');
+    setFirstOperand(null);
+    setOperator(null);
+    setWaitingForSecondOperand(false);
+  };
+
+  // Handle operators
+  const handleOperator = (nextOperator) => {
+    const inputValue = parseFloat(display);
+    
+    if (firstOperand === null) {
+      setFirstOperand(inputValue);
+    } else if (operator) {
+      const result = calculate();
+      setDisplay(String(result));
+      setFirstOperand(result);
+      addToHistory(`${firstOperand} ${operator} ${inputValue} = ${result}`);
+    }
+
+    setWaitingForSecondOperand(true);
+    setOperator(nextOperator);
+  };
+
+  // Perform calculation
+  const calculate = () => {
+    if (firstOperand === null || operator === null) return parseFloat(display);
+
+    const currentValue = parseFloat(display);
+    
+    switch (operator) {
+      case '+':
+        return firstOperand + currentValue;
+      case '-':
+        return firstOperand - currentValue;
+      case '×':
+        return firstOperand * currentValue;
+      case '÷':
+        return firstOperand / currentValue;
+      default:
+        return currentValue;
+    }
+  };
+
+  // Handle equals
+  const handleEquals = () => {
+    if (operator === null || waitingForSecondOperand) return;
+
+    const result = calculate();
+    setDisplay(String(result));
+    setFirstOperand(null);
+    setOperator(null);
+    setWaitingForSecondOperand(true);
+  };
+
+  // Percentage calculation
+  const handlePercentage = () => {
+    const value = parseFloat(display);
+    setDisplay(String(value / 100));
+  };
+
+  // Toggle sign
+  const toggleSign = () => {
+    const value = parseFloat(display);
+    setDisplay(String(value * -1));
+  };
+
+  // Add to history
+  const addToHistory = (entry) => {
+    setHistory(prev => [...prev.slice(-2), entry]);
+  };
+
+  // Keyboard support
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (/[0-9]/.test(e.key)) {
+        inputDigit(parseInt(e.key));
+      } else if (e.key === '.') {
+        inputDecimal();
+      } else if (e.key === 'Escape') {
+        clearAll();
+      } else if (e.key === 'Enter' || e.key === '=') {
+        handleEquals();
+      } else if (['+', '-', '*', '/'].includes(e.key)) {
+        handleOperator(e.key === '*' ? '×' : e.key === '/' ? '÷' : e.key);
+      } else if (e.key === '%') {
+        handlePercentage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [display, firstOperand, operator, waitingForSecondOperand]);
+
+  // Inline styles
+  const styles = {
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      backgroundColor: '#f0f2f5',
+      fontFamily: 'Arial, sans-serif'
+    },
+    calculator: {
+      width: '320px',
+      borderRadius: '20px',
+      overflow: 'hidden',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
+      background: '#000',
+      color: 'white'
+    },
+    display: {
+      padding: '20px',
+      textAlign: 'right',
+      background: '#1c1c1c',
+      minHeight: '120px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end'
+    },
+    history: {
+      fontSize: '0.9rem',
+      color: '#aaa',
+      minHeight: '40px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end'
+    },
+    historyItem: {
+      marginBottom: '5px'
+    },
+    currentValue: {
+      fontSize: '3rem',
+      marginTop: '10px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    },
+    keypad: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: '1px',
+      background: '#333'
+    },
+    button: {
+      border: 'none',
+      padding: '20px',
+      fontSize: '1.5rem',
+      cursor: 'pointer',
+      background: '#505050',
+      color: 'white',
+      transition: 'all 0.2s'
+    },
+    functionButton: {
+      background: '#d4d4d2',
+      color: 'black'
+    },
+    operatorButton: {
+      background: '#ff9500'
+    },
+    zeroButton: {
+      gridColumn: 'span 2'
+    },
+    equalsButton: {
+      background: '#ff9500'
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.calculator}>
+        <div style={styles.display}>
+          <div style={styles.history}>
+            {history.map((item, i) => (
+              <div key={i} style={styles.historyItem}>{item}</div>
+            ))}
+          </div>
+          <div style={styles.currentValue}>{display}</div>
+        </div>
+        
+        <div style={styles.keypad}>
+          <button 
+            style={{...styles.button, ...styles.functionButton}} 
+            onClick={clearAll}
+          >
+            AC
+          </button>
+          <button 
+            style={{...styles.button, ...styles.functionButton}} 
+            onClick={toggleSign}
+          >
+            +/-
+          </button>
+          <button 
+            style={{...styles.button, ...styles.functionButton}} 
+            onClick={handlePercentage}
+          >
+            %
+          </button>
+          <button 
+            style={{...styles.button, ...styles.operatorButton}} 
+            onClick={() => handleOperator('÷')}
+          >
+            ÷
+          </button>
+          
+          <button style={styles.button} onClick={() => inputDigit(7)}>7</button>
+          <button style={styles.button} onClick={() => inputDigit(8)}>8</button>
+          <button style={styles.button} onClick={() => inputDigit(9)}>9</button>
+          <button 
+            style={{...styles.button, ...styles.operatorButton}} 
+            onClick={() => handleOperator('×')}
+          >
+            ×
+          </button>
+          
+          <button style={styles.button} onClick={() => inputDigit(4)}>4</button>
+          <button style={styles.button} onClick={() => inputDigit(5)}>5</button>
+          <button style={styles.button} onClick={() => inputDigit(6)}>6</button>
+          <button 
+            style={{...styles.button, ...styles.operatorButton}} 
+            onClick={() => handleOperator('-')}
+          >
+            -
+          </button>
+          
+          <button style={styles.button} onClick={() => inputDigit(1)}>1</button>
+          <button style={styles.button} onClick={() => inputDigit(2)}>2</button>
+          <button style={styles.button} onClick={() => inputDigit(3)}>3</button>
+          <button 
+            style={{...styles.button, ...styles.operatorButton}} 
+            onClick={() => handleOperator('+')}
+          >
+            +
+          </button>
+          
+          <button 
+            style={{...styles.button, ...styles.zeroButton}} 
+            onClick={() => inputDigit(0)}
+          >
+            0
+          </button>
+          <button style={styles.button} onClick={inputDecimal}>.</button>
+          <button 
+            style={{...styles.button, ...styles.equalsButton}} 
+            onClick={handleEquals}
+          >
+            =
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Calculator;
