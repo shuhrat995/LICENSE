@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mcode.com | Shuhratbek</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      background-color: #001f3f;
+      overflow-x: hidden;
+    }
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 50, 0.8);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 1000;
+    }
+    nav a {
+      color: #00d4ff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .animated-bg {
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(270deg, #003366, #004080, #0059b3, #0073e6, #3399ff);
+      background-size: 800% 800%;
+      animation: blueGradientAnimation 60s ease infinite;
+      z-index: -1;
+    }
+    @keyframes blueGradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .container {
+      padding: 100px 50px 50px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 1.5rem;
+      color: #cceeff;
+      margin-bottom: 30px;
+    }
+    section {
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    .highlight {
+      color: #00d4ff;
+      font-weight: bold;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #aaddff;
+    }
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="animated-bg"></div>
+
+  <nav>
+    <div><a href="#">Mcode.com</a></div>
+    <div>
+      <a href="#about">Men haqimda</a>
+      <a href="#projects">Loyihalar</a>
+      <a href="#contact">Aloqa</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Rasm joyi -->
+    <img src="./my.jpg" alt="Shuhratbek" class="profile-img" />
+
+    <h1>Mcode.com</h1>
+    <h2>by <span class="highlight">Madaminov Shuhratbek</span></h2>
+
+    <section id="about">
+      <h3>🧑‍💻 Men haqimda</h3>
+      <p>Assalomu alaykum! Men <span class="highlight">Madaminov Shuhratbek</span>, Xorazm viloyati, Xonqa tumanidanman. 11-sinfda o‘qiyman va frontend dasturchilikni o‘rganmoqdaman. HTML, CSS, JavaScriptni bilaman, ReactJS ni o‘rganayapman.</p>
+    </section>
+
+    <section id="projects">
+      <h3>📂 Loyiha tajribalarim</h3>
+      <ul>
+        <li>🌤 Ob-havo ilovasi</li>
+        <li>💱 Valyuta kurslari sayti</li>
+        <li>🧠 "Eslab qol" o‘yin dasturi</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>🎯 Maqsadlarim</h3>
+      <p>Tajriba yig‘ish, O‘zbekistondagi va chet eldagi kompaniyalarda ishlash, online ishlarga tayyor turish va jamoaviy loyihalarda qatnashish niyatidaman.</p>
+    </section>
+
+    <section id="contact">
+      <h3>📞 Aloqa</h3>
+      <p>Email: <a href="mailto:shuhratmadaminov509@gmail.com" style="color:#00d4ff">shuhratmadaminov509@gmail.com</a></p>
+      <p>GitHub: <a href="https://github.com/shuhrat995" target="_blank" style="color:#00d4ff">github.com/shuhrat995</a></p>
+    </section>
+
+    <footer>
+      &copy; 2025 Mcode.com | Created by Shuhratbek
+    </footer>
+  </div>
+</body>
+</html>
